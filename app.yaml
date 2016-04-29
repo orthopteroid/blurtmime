@@ -1,0 +1,10 @@
+application: blurtmime
+runtime: go
+api_version: go1
+version: v2
+instance_class: B1
+
+handlers:
+- url: /.*
+  script: _go_app
+  
