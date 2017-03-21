@@ -218,7 +218,7 @@ func (cc *ConsonantCursor) Next() (string) {
 	cc.processlog += " " + step + " ]"
 	cc.bou.Next( cc.op.Next() )
 	cc.log += " " + s + " ]"
-	ipaString += PickRandString( ipaConsonants[ s ] ) + " "
+	ipaString += PickRandString( ipaConsonants[ s ] )
 	return s
 }
 
@@ -258,7 +258,7 @@ func (vc *VowelCursor) Next() (string) {
 	vc.processlog += " "+ step + " ]"
 	vc.bou.Next( step )
 	vc.log += " " + s + " ]"
-	ipaString += PickRandString( ipaVowels[ s ] ) + " "
+	ipaString += PickRandString( ipaVowels[ s ] )
 	return s
 }
 
@@ -290,7 +290,7 @@ func rootHandler(w http.ResponseWriter, r *http.Request) {
 	phonemes = ""
 	for s := 0; s < syllables; s++ {
 		// consonant
-		ipaString += " [ "
+		ipaString += ""
 		phonemes += " [ " + cc.Next() + " "
 		syllablelog += " [ consonant"
 		// consonant, vowel or vowel, consonant
@@ -303,19 +303,24 @@ func rootHandler(w http.ResponseWriter, r *http.Request) {
 		}
 		// consonant
 		phonemes += cc.Next() + " ]"
-		ipaString += " ]"
+		ipaString += " "
 		syllablelog += " consonant ]"
 	}
+
+	var descr = `This app uses a hidden Markov Processes each for how vowels and constants
+	are formed in your mouth and picks sounds as it makes gradual deformations to your
+	oral cavity. Originally designed to create ethnic DnD character names....`
 
 	io.WriteString( w, "<!DOCTYPE html><html lang='en'>" )
 		io.WriteString( w, "<head><title>BlurtMime</title><head>" )
 		io.WriteString( w, "<body>" )
 			io.WriteString( w, "<b>BlurtMime</b>: Articulatory Phonetics using hidden Markov Processes" )
 			io.WriteString( w, "<br/><a href='/'>Generate</a>  <a href='/details'>Details</a>" )
-			io.WriteString( w, "<br/><br/>This app uses a hidden Markov Processes each for how vowels and constants " )
-			io.WriteString( w, "are formed in your mouth and picks sounds as it makes gradual deformations to your oral cavity. " )
+			io.WriteString( w, "<br/><br/>")
+			io.WriteString( w, descr )
 			io.WriteString( w, "<br/><br/>" + strconv.Itoa( syllables ) + " syllables:" + phonemes )
 			io.WriteString( w, "<br/><br/>IPA symbology: " + ipaString )
+			io.WriteString( w, "<br/><br/><a href='https://speak-ipa.bearbin.net/?speak=" + ipaString +"'>Speak using bearbin</a>" )
 		io.WriteString( w, "</body>" )
 	io.WriteString( w, "</html>" )
 }
@@ -338,6 +343,7 @@ func detailsHandler(w http.ResponseWriter, r *http.Request) {
 			io.WriteString( w, "<br/><br/><hr/>" )
 			io.WriteString( w, "<br/><a href='https://en.wikipedia.org/wiki/Articulatory_phonetics'>https://en.wikipedia.org/wiki/Articulatory_phonetics</a>" )
 			io.WriteString( w, "<br/><a href='https://en.wikipedia.org/wiki/IPA_pulmonic_consonant_chart_with_audio'>https://en.wikipedia.org/wiki/IPA_pulmonic_consonant_chart_with_audio</a>" )
+			io.WriteString( w, "<br/><a href='https://en.wikipedia.org/wiki/Kirshenbaum'>https://en.wikipedia.org/wiki/Kirshenbaum</a>" )
 			io.WriteString( w, "<br/><a href='https://en.wikipedia.org/wiki/IPA_vowel_chart_with_audio'>https://en.wikipedia.org/wiki/IPA_vowel_chart_with_audio</a>" )
 			io.WriteString( w, "<br/><a href='https://en.wikipedia.org/wiki/Phonotactics'>https://en.wikipedia.org/wiki/Phonotactics</a>" )
 			io.WriteString( w, "<br/><a href='http://www.yorku.ca/earmstro/ipa/diphthongs.html'>http://www.yorku.ca/earmstro/ipa/diphthongs.html <--- with cool animations</a>" )
