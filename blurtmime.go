@@ -1,4 +1,6 @@
 package blurtmime
+// local gae launch from project directory:
+// dev_appserver.py app.yaml
 
 import (
 	"strconv"
@@ -311,8 +313,14 @@ func rootHandler(w http.ResponseWriter, r *http.Request) {
 	are formed in your mouth and picks sounds as it makes gradual deformations to your
 	oral cavity. Originally designed to create ethnic DnD character names....`
 
-	io.WriteString( w, "<!DOCTYPE html><html lang='en'>" )
-		io.WriteString( w, "<head><title>BlurtMime</title><head>" )
+	io.WriteString( w, "<!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Transitional//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd'> <html xmlns='http://www.w3.org/1999/xhtml'>" )
+		io.WriteString( w, "<head>" )
+			io.WriteString( w, "<title>BlurtMime</title>" )
+			io.WriteString( w, "<meta charset='utf-8'>" )
+			io.WriteString( w, "<script type='text/javascript' src='mespeak.js'></script>" )
+			io.WriteString( w, "<script type='text/javascript' src='itinerarium.js'></script>" )
+			io.WriteString( w, "<script type='text/javascript'>meSpeak.loadConfig('mespeak_config.json');\n meSpeak.loadVoice('en.json');</script>" )
+		io.WriteString( w, "</head>" )
 		io.WriteString( w, "<body>" )
 			io.WriteString( w, "<b>BlurtMime</b>: Articulatory Phonetics using hidden Markov Processes" )
 			io.WriteString( w, "<br/><a href='/'>Generate</a>  <a href='/details'>Details</a>" )
@@ -320,7 +328,12 @@ func rootHandler(w http.ResponseWriter, r *http.Request) {
 			io.WriteString( w, descr )
 			io.WriteString( w, "<br/><br/>" + strconv.Itoa( syllables ) + " syllables:" + phonemes )
 			io.WriteString( w, "<br/><br/>IPA symbology: " + ipaString )
-			io.WriteString( w, "<br/><br/><a href='https://speak-ipa.bearbin.net/?speak=" + ipaString +"'>Speak using bearbin</a>" )
+			io.WriteString( w, "<br/><br/>Synthesize in your browser using meSpeak and Itinerarium's IPA substution rules:" )
+			io.WriteString( w, "<form onsubmit='process(); return false;'>" )
+				io.WriteString( w, "<input id='ipa-input' onchange='clear_download_button(); return false;' type='text' value=\""+ipaString+"\" />" )
+				io.WriteString( w, "<input id='submit' onclick='process(); return false;' type='button' value='pronounce' />" )
+				io.WriteString( w, "<input id='download-button' onclick='download(); return false;' type='button' disabled='disabled' value='download pronunciation' />" )
+			io.WriteString( w, "</form>" )
 		io.WriteString( w, "</body>" )
 	io.WriteString( w, "</html>" )
 }
@@ -341,6 +354,9 @@ func detailsHandler(w http.ResponseWriter, r *http.Request) {
 			io.WriteString( w, "<br/><br/>vowel productions: " + vc.log )
 			io.WriteString( w, "<br/><br/>syllables: " + syllablelog )
 			io.WriteString( w, "<br/><br/><hr/>" )
+			io.WriteString( w, "<br/><a href='http://www.masswerk.at/mespeak/'>http://www.masswerk.at/mespeak/</a>" )
+			io.WriteString( w, "<br/><a href='https://github.com/itinerarium/phoneme-synthesis'>https://github.com/itinerarium/phoneme-synthesis</a>" )
+			io.WriteString( w, "<br/>" )
 			io.WriteString( w, "<br/><a href='https://en.wikipedia.org/wiki/Articulatory_phonetics'>https://en.wikipedia.org/wiki/Articulatory_phonetics</a>" )
 			io.WriteString( w, "<br/><a href='https://en.wikipedia.org/wiki/IPA_pulmonic_consonant_chart_with_audio'>https://en.wikipedia.org/wiki/IPA_pulmonic_consonant_chart_with_audio</a>" )
 			io.WriteString( w, "<br/><a href='https://en.wikipedia.org/wiki/Kirshenbaum'>https://en.wikipedia.org/wiki/Kirshenbaum</a>" )

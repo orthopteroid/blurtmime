@@ -1,10 +1,13 @@
-application: blurtmime
 runtime: go
 api_version: go1
-version: v2
-instance_class: B1
 
 handlers:
+- url: /(.*\.(json$|js$))
+  static_files: \1
+  upload: (.*\.(json$|js$))
+  application_readable: true
+
 - url: /.*
   script: _go_app
   
+instance_class: B1
