@@ -11,3 +11,5 @@ handlers:
   script: _go_app
   
 instance_class: B1
+manual_scaling:
+  instances: 2

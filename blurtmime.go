@@ -309,11 +309,14 @@ func rootHandler(w http.ResponseWriter, r *http.Request) {
 		syllablelog += " consonant ]"
 	}
 
-	var descr = `This app uses a hidden Markov Processes each for how vowels and constants
-	are formed in your mouth and picks sounds as it makes gradual deformations to your
-	oral cavity. Originally designed to create ethnic DnD character names....`
+	var descr = `This app uses a hidden Markov Processes each for forming vowels and constants
+	in a theoretical oral cavity - ie tongue, lips, palette. The algorithim starts with a random 
+	formant and performs a few gradual deformations to fill out syllables. A syllable can have 3
+	to 5 formants, then another syllable is started with some other random formant. Navigate to
+	the Details page for more information.
+	<br/><br/>This application was originally a lame attempt to create ethnic sounding DnD character names....`
 
-	io.WriteString( w, "<!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Transitional//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd'> <html xmlns='http://www.w3.org/1999/xhtml'>" )
+	io.WriteString( w, "<!DOCTYPE html><html lang='en'>" )
 		io.WriteString( w, "<head>" )
 			io.WriteString( w, "<title>BlurtMime</title>" )
 			io.WriteString( w, "<meta charset='utf-8'>" )
@@ -328,11 +331,12 @@ func rootHandler(w http.ResponseWriter, r *http.Request) {
 			io.WriteString( w, descr )
 			io.WriteString( w, "<br/><br/>" + strconv.Itoa( syllables ) + " syllables:" + phonemes )
 			io.WriteString( w, "<br/><br/>IPA symbology: " + ipaString )
-			io.WriteString( w, "<br/><br/>Synthesize in your browser using meSpeak and Itinerarium's IPA substution rules:" )
+			io.WriteString( w, "<br/><br/>Synthesize in your browser using meSpeak and Itinerarium's IPA substitution rules:" )
 			io.WriteString( w, "<form onsubmit='process(); return false;'>" )
 				io.WriteString( w, "<input id='ipa-input' onchange='clear_download_button(); return false;' type='text' value=\""+ipaString+"\" />" )
-				io.WriteString( w, "<input id='submit' onclick='process(); return false;' type='button' value='pronounce' />" )
-				io.WriteString( w, "<input id='download-button' onclick='download(); return false;' type='button' disabled='disabled' value='download pronunciation' />" )
+				io.WriteString( w, "<input id='submit' onclick='process(); return false;' type='button' value='Pronounce' />" )
+				io.WriteString( w, "<input id='reload-button' onclick='location.reload(); return false;' type='button' value='Make another' />" )
+				io.WriteString( w, "<input id='download-button' onclick='download(); return false;' type='button' disabled='disabled' value='Download pronunciation' />" )
 			io.WriteString( w, "</form>" )
 		io.WriteString( w, "</body>" )
 	io.WriteString( w, "</html>" )
@@ -340,7 +344,7 @@ func rootHandler(w http.ResponseWriter, r *http.Request) {
 
 func detailsHandler(w http.ResponseWriter, r *http.Request) {
 	io.WriteString( w, "<!DOCTYPE html><html lang='en'>" )
-		io.WriteString( w, "<head><title>BlurtMime</title><head>" )
+		io.WriteString( w, "<head><title>BlurtMime</title></head>" )
 		io.WriteString( w, "<body>" )
 			io.WriteString( w, "<b>BlurtMime</b>: Articulatory Phonetics using hidden Markov Processes" )
 			io.WriteString( w, "<br/><a href='/details'>Generate</a>  <a href='/'>Main</a>" )
