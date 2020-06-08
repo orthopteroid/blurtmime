@@ -1,13 +1,16 @@
-runtime: go
-api_version: go1.9
+runtime: go112
 
 handlers:
-- url: /(.*\.(json$|js$))
-  static_files: \1
-  upload: (.*\.(json$|js$))
-  application_readable: true
+- url: /(.*\.js)$
+  mime_type: text/javascript
+  static_files: static/\1
+  upload: static/(.*\.js)
 
-- url: /.*
-  script: _go_app
-  
-instance_class: F1
+- url: /(.*\.json)$
+  mime_type: application/json
+  static_files: static/\1
+  upload: static/(.*\.json)
+
+- url: /
+  secure: always
+  script: auto
